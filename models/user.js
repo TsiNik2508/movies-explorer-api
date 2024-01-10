@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const isEmail = require('validator');
+const { isEmail } = require('validator');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
@@ -29,11 +29,11 @@ function findUserByID(email, password) {
     .select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Введены невероятные данные'));
+        return Promise.reject(new Error('Введены неверные данные'));
       }
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          return Promise.reject(new Error('Введены невероятные данные'));
+          return Promise.reject(new Error('Введены неверные данные'));
         }
         return user;
       });
