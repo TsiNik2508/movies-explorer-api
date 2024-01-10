@@ -11,7 +11,7 @@ const app = express();
 const { PORT = 3000 } = process.env;
 
 mongoose.connect(
-  process.env.MONGO_URL || 'mongodb://localhost:27017/bitmoviesdb',
+  process.env.MONGO_URL || 'mongodb://localhost:27017/bitfilmsdb',
 );
 
 app.use(express.json());
