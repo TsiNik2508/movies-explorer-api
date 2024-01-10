@@ -16,15 +16,18 @@ module.exports.getAllUsers = (req, res, next) => {
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .then((users) => {
-      res.status(200).send(users);
+    .then((user) => {
+      if (!user) {
+        throw new NotFound('Текущий пользователь не найден');
+      }
+      res.status(200).send(user);
     })
     .catch(next);
 };
 
 module.exports.updateUser = (req, res, next) => {
   const { name, email } = req.body;
-  return User.findByIdAndUpdate(
+  User.findByIdAndUpdate(
     req.user._id,
     { name, email },
     {
@@ -41,14 +44,12 @@ module.exports.updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) {
         next(new Conflict('Пользователь с такой почтой уже существует'));
-        return;
+      } else if (err.name === 'ValidationError') {
+        next(new BadRequest('Ошибка валидации при обновлении данных пользователя'));
+      } else {
+        next(err);
       }
-      if (err.name === 'ValidationError') {
-        throw new BadRequest('Ошибка при обновлении данных');
-      }
-      throw err;
-    })
-    .catch(next);
+    });
 };
 
 module.exports.createUser = (req, res, next) => {
@@ -66,21 +67,23 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.code === 11000) {
-        next(new Conflict('Ошибка при создании пользователя'));
-        return;
+        return next(new Conflict('Пользователь с такой почтой уже существует'));
       }
       if (err.name === 'ValidationError') {
-        next(new BadRequest('На сервере произошла ошибка'));
-        return;
+        return next(new BadRequest('Ошибка валидации при создании пользователя'));
       }
-      next(err);
+      return next(err);
     });
 };
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  return User.findUserByID(email, password)
+
+  User.findUserByID(email, password)
     .then((user) => {
+      if (!user) {
+        throw new Unauthorized('Введены неверные данные');
+      }
       const token = jwt.sign(
         { _id: user._id },
         NODE_ENV === 'production' ? JWT_SECRET : 'my-secret-key',
@@ -90,8 +93,9 @@ module.exports.login = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'Error') {
-        next(new Unauthorized('Введены неверные данные'));
+        return next(new Unauthorized('Введены неверные данные'));
       }
-      next(err);
+
+      return next(err);
     });
 };

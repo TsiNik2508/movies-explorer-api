@@ -27,6 +27,13 @@ router.post(
   createUser,
 );
 
+router.post(
+  '/signout',
+  (req, res) => {
+    res.clearCookie('jwt').status(200).send({ message: 'Вы успешно вышли' });
+  },
+);
+
 router.use(auth);
 router.use('/users', require('./users'));
 router.use('/movies', require('./movies'));

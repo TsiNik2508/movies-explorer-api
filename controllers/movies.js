@@ -7,7 +7,7 @@ module.exports.getAllMovies = (req, res, next) => {
   const owner = req.user._id;
   Movie.find({ owner })
     .then((movies) => res.send(movies))
-    .catch((err) => next(err));
+    .catch(next);
 };
 
 module.exports.createMovies = (req, res, next) => {
@@ -41,10 +41,9 @@ module.exports.createMovies = (req, res, next) => {
     .then((movie) => res.status(201).send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequest('На сервере произошла ошибка'));
-        return;
+        return next(new BadRequest('Ошибка валидации при создании фильма'));
       }
-      next(err);
+      return next(err);
     });
 };
 
@@ -65,8 +64,8 @@ module.exports.deleteMovie = (req, res, next) => {
     .then((deletedMovie) => res.status(200).send(deletedMovie))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequest('На сервере произошла ошибка'));
+        return next(new BadRequest('Некорректный формат данных для удаления фильма'));
       }
-      next(err);
+      return next(err);
     });
 };
