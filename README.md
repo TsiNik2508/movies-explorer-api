@@ -1,9 +1,9 @@
 # Ru
 
-# Проект: Навигатор фильмов (backend)
+# Дипломный проект: Movies-explorer (backend)
 
 Дипломный проект выполненный в рамках курса "Веб-разработчик" от Яндекс Практикум.
-Проект представляет из себя бэкенд часть для проекта [movies-explorer](https://github.com/TsiNik2508/movies-explorer-frontend) также выполненного в рамках указанного выше учебного курса.
+Проект представляет из себя бэкенд часть для проекта [Movies-explorer](https://github.com/TsiNik2508/movies-explorer-frontend) также выполненного в рамках указанного выше учебного курса.
 
 ## Оглавление
 
@@ -103,7 +103,7 @@
 
 # En
 
-# Project: Movies Explorer (backend)
+# Diploma project: Movies Explorer (backend)
 
 This is a diploma project completed as part of the "Web Developer" course from Yandex Practicum. The project represents the backend part for the [Movies Explorer project](https://github.com/TsiNik2508/movies-explorer-frontend) also completed within the same educational program.
 
